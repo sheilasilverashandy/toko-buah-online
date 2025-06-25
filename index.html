@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Toko Buah Online</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333; 
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header { 
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white; 
+      padding: 2rem; 
+      text-align: center; 
+      font-size: 2rem; 
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    main { 
+      padding: 2rem 1rem;
+      flex: 1;
+    }
+
+    .container { 
+      max-width: 500px; 
+      margin: auto; 
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .section {
+      padding: 2rem;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+    }
+
+    .section h3 {
+      color: #4CAF50;
+      margin-bottom: 1.5rem;
+      font-size: 1.3rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .product { 
+      display: flex; 
+      gap: 1rem; 
+      border-bottom: 1px solid #f0f0f0; 
+      padding: 1rem 0; 
+      transition: all 0.3s ease;
+      border-radius: 10px;
+      margin-bottom: 0.5rem;
+    }
+
+    .product:hover {
+      background: rgba(76, 175, 80, 0.05);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .product img { 
+      width: 70px; 
+      height: 70px; 
+      border-radius: 15px; 
+      object-fit: cover;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .product-info {
+      flex: 1;
+    }
+
+    .product-info h4 { 
+      margin: 0 0 0.5rem 0; 
+      font-size: 1.1rem;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .product-info p { 
+      margin: 0; 
+      font-size: 1rem; 
+      color: #4CAF50;
+      font-weight: bold;
+    }
+
+    .product button { 
+      padding: 0.6rem 1.2rem; 
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white; 
+      border: none; 
+      border-radius: 25px; 
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+    }
+
+    .product button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+    }
+
+    .product button:active {
+      transform: translateY(0);
+    }
+
+    .cart ul { 
+      list-style: none;
+      padding: 0;
+    }
+
+    .cart li { 
+      padding: 0.8rem;
+      background: rgba(76, 175, 80, 0.05);
+      margin-bottom: 0.5rem;
+      border-radius: 10px;
+      border-left: 4px solid #4CAF50;
+    }
+
+    .total { 
+      font-weight: bold; 
+      text-align: right; 
+      margin-top: 1rem; 
+      font-size: 1.3rem;
+      color: #4CAF50;
+      padding: 1rem;
+      background: rgba(76, 175, 80, 0.1);
+      border-radius: 10px;
+    }
+
+    input { 
+      width: 100%; 
+      padding: 1rem; 
+      margin: 0.5rem 0; 
+      border-radius: 15px; 
+      border: 2px solid #e0e0e0; 
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #4CAF50;
+      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+    }
+
+    button { 
+      width: 100%; 
+      padding: 1rem; 
+      font-size: 1rem; 
+      border: none; 
+      border-radius: 15px; 
+      margin-top: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-auth { 
+      background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+    }
+
+    .btn-auth:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+    }
+
+    .btn-checkout { 
+      background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+    }
+
+    .btn-checkout:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+    }
+
+    .btn-bayar { 
+      background: linear-gradient(135deg, #E91E63 0%, #C2185B 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+    }
+
+    .btn-bayar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+    }
+
+    .hidden { 
+      display: none; 
+    }
+
+    .welcome-message {
+      text-align: center;
+      padding: 1rem;
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+      border-radius: 15px;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .auth-toggle {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .auth-toggle a {
+      color: #2196F3;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .auth-toggle a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    .footer-content {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .footer-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-section h4 {
+      color: #4CAF50;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .footer-section p {
+      margin: 0.3rem 0;
+      color: #ecf0f1;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 1rem;
+      margin-top: 1rem;
+      color: #bdc3c7;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        margin: 0.5rem;
+        border-radius: 15px;
+      }
+      
+      header {
+        font-size: 1.5rem;
+        padding: 1.5rem;
+      }
+      
+      .section {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>🍎 Toko Buah Online 🍊</header>
+  
+  <main>
+    <div class="container">
+      <!-- User Area -->
+      <div class="section">
+        <div id="user-area">
+          <button class="btn-auth" onclick="showAuth('login')">Masuk / Daftar untuk Checkout</button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login-form" class="hidden">
+          <h3>🔐 Masuk ke Akun</h3>
+          <input type="text" id="login-username" placeholder="Username">
+          <input type="password" id="login-password" placeholder="Password">
+          <button class="btn-auth" onclick="login()">Masuk</button>
+          <div class="auth-toggle">
+            <p>Belum punya akun? <a onclick="showAuth('register')">Daftar di sini</a></p>
+          </div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-form" class="hidden">
+          <h3>📝 Daftar Akun Baru</h3>
+          <input type="text" id="register-username" placeholder="Username">
+          <input type="password" id="register-password" placeholder="Password">
+          <input type="password" id="register-confirm" placeholder="Konfirmasi Password">
+          <input type="email" id="register-email" placeholder="Email">
+          <button class="btn-auth" onclick="register()">Daftar</button>
+          <div class="auth-toggle">
+            <p>Sudah punya akun? <a onclick="showAuth('login')">Masuk di sini</a></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Products -->
+      <div class="section">
+        <h3>🛒 Daftar Buah Segar</h3>
+        <div id="product-list"></div>
+      </div>
+
+      <!-- Cart -->
+      <div class="section">
+        <h3>🛍️ Keranjang Belanja</h3>
+        <ul id="cart-list"></ul>
+        <div class="total">Total: <span id="total-price">Rp 0</span></div>
+        <button class="btn-checkout" onclick="showCheckout()">Checkout Sekarang</button>
+      </div>
+
+      <!-- Checkout -->
+      <div class="section hidden" id="checkout-form">
+        <h3>💳 Checkout Pesanan</h3>
+        <input type="text" id="alamat" placeholder="Alamat Lengkap Pengiriman">
+        <input type="text" id="metode" placeholder="Metode Pembayaran (DANA/OVO/Bank)">
+        <button class="btn-bayar" onclick="bayar()">Bayar Sekarang</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>🍎 Toko Buah Online</h4>
+        <p>Menyediakan buah-buahan segar berkualitas tinggi</p>
+        <p>langsung dari petani lokal Indonesia</p>
+      </div>
+      
+      <div class="footer-section">
+        <h4>📞 Kontak Kami</h4>
+        <p>📱 WhatsApp: +62 812-3456-7890</p>
+        <p>📧 Email: info@tokobuahonline.com</p>
+        <p>🏪 Alamat: Jl. Buah Segar No. 123, Jakarta</p>
+      </div>
+      
+      <div class="footer-section">
+        <h4>🕒 Jam Operasional</h4>
+        <p>Senin - Jumat: 08:00 - 20:00</p>
+        <p>Sabtu - Minggu: 09:00 - 18:00</p>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2025 Toko Buah Online. Semua hak dilindungi.</p>
+        <p>Buah segar, harga terjangkau, pelayanan terpercaya! 🌟</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let isLoggedIn = false;
+    let currentUser = '';
+    
+    const products = [
+      { id: 1, name: "Apel Malang", price: 20000, image: "https://via.placeholder.com/100x100/ff6b6b/ffffff?text=🍎" },
+      { id: 2, name: "Jeruk Medan", price: 15000, image: "https://via.placeholder.com/100x100/ffa500/ffffff?text=🍊" },
+      { id: 3, name: "Pisang Ambon", price: 10000, image: "https://via.placeholder.com/100x100/ffeb3b/ffffff?text=🍌" },
+      { id: 4, name: "Mangga Harum Manis", price: 25000, image: "https://via.placeholder.com/100x100/4caf50/ffffff?text=🥭" }
+    ];
+
+    const cart = [];
+
+    function showAuth(type) {
+      document.getElementById("login-form").classList.add("hidden");
+      document.getElementById("register-form").classList.add("hidden");
+      
+      if (type === 'login') {
+        document.getElementById("login-form").classList.remove("hidden");
+      } else {
+        document.getElementById("register-form").classList.remove("hidden");
+      }
+    }
+
+    function login() {
+      const user = document.getElementById("login-username").value.trim();
+      const pass = document.getElementById("login-password").value.trim();
+      
+      if (user && pass) {
+        isLoggedIn = true;
+        currentUser = user;
+        document.getElementById("login-form").classList.add("hidden");
+        document.getElementById("user-area").innerHTML = `
+          <div class="welcome-message">
+            <p>Selamat datang, <strong>${user}</strong>! 🎉</p>
+            <button class="btn-auth" onclick="logout()" style="width: auto; padding: 0.5rem 1rem; margin-top: 0.5rem;">Keluar</button>
+          </div>`;
+        alert("✅ Login berhasil! Selamat berbelanja!");
+      } else {
+        alert("⚠️ Mohon isi username dan password!");
+      }
+    }
+
+    function register() {
+      const user = document.getElementById("register-username").value.trim();
+      const pass = document.getElementById("register-password").value.trim();
+      const confirm = document.getElementById("register-confirm").value.trim();
+      const email = document.getElementById("register-email").value.trim();
+      
+      if (!user || !pass || !confirm || !email) {
+        alert("⚠️ Mohon isi semua field!");
+        return;
+      }
+      
+      if (pass !== confirm) {
+        alert("⚠️ Password tidak cocok!");
+        return;
+      }
+      
+      if (pass.length < 6) {
+        alert("⚠️ Password minimal 6 karakter!");
+        return;
+      }
+      
+      isLoggedIn = true;
+      currentUser = user;
+      document.getElementById("register-form").classList.add("hidden");
+      document.getElementById("user-area").innerHTML = `
+        <div class="welcome-message">
+          <p>Pendaftaran berhasil! Selamat datang, <strong>${user}</strong>! 🎉</p>
+          <button class="btn-auth" onclick="logout()" style="width: auto; padding: 0.5rem 1rem; margin-top: 0.5rem;">Keluar</button>
+        </div>`;
+      alert("✅ Pendaftaran berhasil! Selamat berbelanja!");
+    }
+
+    function logout() {
+      isLoggedIn = false;
+      currentUser = '';
+      document.getElementById("user-area").innerHTML = `
+        <button class="btn-auth" onclick="showAuth('login')">Masuk / Daftar untuk Checkout</button>`;
+      document.getElementById("checkout-form").classList.add("hidden");
+      alert("👋 Anda telah keluar. Terima kasih!");
+    }
+
+    function renderProducts() {
+      const container = document.getElementById("product-list");
+      container.innerHTML = "";
+      products.forEach(product => {
+        const div = document.createElement("div");
+        div.className = "product";
+        div.innerHTML = `
+          <img src="${product.image}" alt="${product.name}">
+          <div class="product-info">
+            <h4>${product.name}</h4>
+            <p>Rp ${product.price.toLocaleString()}</p>
+            <button onclick="addToCart(${product.id})">+ Tambah</button>
+          </div>`;
+        container.appendChild(div);
+      });
+    }
+
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      const cartItem = cart.find(item => item.id === productId);
+      
+      if (cartItem) {
+        cartItem.qty++;
+      } else {
+        cart.push({ ...product, qty: 1 });
+      }
+      
+      renderCart();
+      
+      // Simple animation feedback
+      const button = event.target;
+      const originalText = button.textContent;
+      button.textContent = "✅ Ditambahkan!";
+      button.style.background = "#4CAF50";
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.style.background = "";
+      }, 1000);
+    }
+
+    function renderCart() {
+      const cartList = document.getElementById("cart-list");
+      const totalPrice = document.getElementById("total-price");
+      cartList.innerHTML = "";
+      let total = 0;
+      
+      if (cart.length === 0) {
+        cartList.innerHTML = "<li style='text-align: center; color: #666;'>Keranjang masih kosong 🛒</li>";
+      } else {
+        cart.forEach(item => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>${item.name} x ${item.qty}</span>
+              <span style="font-weight: bold; color: #4CAF50;">Rp ${(item.price * item.qty).toLocaleString()}</span>
+            </div>`;
+          cartList.appendChild(li);
+          total += item.price * item.qty;
+        });
+      }
+      
+      totalPrice.textContent = `Rp ${total.toLocaleString()}`;
+    }
+
+    function showCheckout() {
+      if (!isLoggedIn) {
+        alert("🔐 Silakan login terlebih dahulu untuk checkout!");
+        showAuth('login');
+        return;
+      }
+      
+      if (cart.length === 0) {
+        alert("🛒 Keranjang belanja masih kosong!");
+        return;
+      }
+      
+      document.getElementById("checkout-form").classList.remove("hidden");
+      document.getElementById("checkout-form").scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function bayar() {
+      const alamat = document.getElementById("alamat").value.trim();
+      const metode = document.getElementById("metode").value.trim();
+      
+      if (!alamat || !metode) {
+        alert("⚠️ Mohon lengkapi alamat dan metode pembayaran!");
+        return;
+      }
+      
+      const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const orderSummary = cart.map(item => `${item.name} x ${item.qty}`).join(', ');
+      
+      alert(`🎉 Pesanan berhasil diproses!\n\n📦 Pesanan: ${orderSummary}\n💰 Total: Rp ${total.toLocaleString()}\n📍 Alamat: ${alamat}\n💳 Pembayaran: ${metode}\n\nTerima kasih ${currentUser}! 🙏`);
+      
+      // Reset form
+      cart.length = 0;
+      renderCart();
+      document.getElementById("checkout-form").classList.add("hidden");
+      document.getElementById("alamat").value = "";
+      document.getElementById("metode").value = "";
+    }
+
+    // Initial render
+    renderProducts();
+    renderCart();
+  </script>
+</body>
+</html>
